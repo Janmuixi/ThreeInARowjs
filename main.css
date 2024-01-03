@@ -1,0 +1,40 @@
+table {
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+td {
+    width: 100px;
+    height: 100px;
+    text-align: center; 
+    font-size: 30px;
+    vertical-align: middle;
+    border: 1px solid #000;
+}
+
+button {
+    margin: 10px;
+    padding: 10px;
+    font-size: 1em;
+    background-color: #4CAF50;
+    /* Green */
+    color: white;
+    border: none;
+    cursor: pointer;
+    width: 20%;
+    opacity: 0.9;
+}
+
+button:hover {
+    opacity: 1;
+}
+
+.container {
+    width: 50%;
+    margin: auto;
+    text-align: center;
+}
+
+.winner {
+    background-color: yellow;
+}
