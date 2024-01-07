@@ -1,126 +1,115 @@
-let state = [
+/**
+ * Improvement: He creado un initialState para no duplicar codigo y tener una consistencia
+ * en el caso de que se quiera modificar
+*/
+
+const initialState = () => [
   [null, null, null],
   [null, null, null],
   [null, null, null]
 ];
+
+let state = initialState();
 
 let currentPlayer = 'x';
 let winner = null;
 let xWins = 0;
 let oWins = 0;
 
+let table = document.getElementById("game-table");
+
 // Función para rellenar el tablero según el estado del juego
+/**
+ * Improvement: No es recomendable insertar html en bucle, entonces he preferido crear un fragment,
+ * además he pasado los for's a unos foreach
+ */
 function populate(state) {
-  let table = document.getElementById("game-table");
-  for (let i = 0; i < state.length; i++) {
-    let row = table.insertRow(i);
-    for (let j = 0; j < state[i].length; j++) {
-      let cell = row.insertCell(j);
-      cell.innerHTML = state[i][j];
-    }
-  }
+  const table = document.getElementById("game-table");
+  table.innerHTML = "";
+
+  const fragment = document.createDocumentFragment();
+
+  state.forEach((rowValues) => {
+    const row = fragment.appendChild(document.createElement("tr"));
+
+    rowValues.forEach((cellValue) => {
+      const cell = row.appendChild(document.createElement("td"));
+      cell.textContent = cellValue;
+    });
+  });
+
+  table.appendChild(fragment);
 }
 
 // Función para determinar qué jugador debe ser el siguiente
+/*Improvement: en vez de acceder en un bucle dentro de otro bucle he 
+utilizado la función flat y luego filter para saber
+cuantas cells son de "x" u "o" */
 function nextPlayer(state) {
-  let xCount = 0;
-  let oCount = 0;
-  for (let i = 0; i < state.length; i++) {
-    for (let j = 0; j < state[i].length; j++) {
-      if (state[i][j] === 'x') {
-        xCount++;
-      } else if (state[i][j] === 'o') {
-        oCount++;
-      }
-    }
-  }
-  if (xCount === oCount) {
-    return 'x';
-  } else {
-    return 'o';
-  }
+  const flattenState = state.flat();
+  const xCount = flattenState.filter(cell => cell === 'x').length;
+  const oCount = flattenState.filter(cell => cell === 'o').length;
+
+  return xCount === oCount ? 'x' : 'o';
 }
 
 // Función para determinar si hay un ganador en el juego actual
+/**
+ * Improvement: En vez de chequear todas las posibilidades, cuando se ha
+ * encontrado una casuistica usamos el return, tambien nos aseguramos que no sea null
+ * ya que triple casilla null tambien daría la casuistica
+ */
 function findWinner(state) {
-  let winner = null;
-  // Chequear filas
+  // Chequear filas y columnas
   for (let i = 0; i < state.length; i++) {
     if (state[i][0] === state[i][1] && state[i][1] === state[i][2]) {
-      winner = state[i][0];
+      if (state[i][0]) {
+        return state[i][0];
+      }
     }
-  }
-  // Chequear columnas
-  for (let i = 0; i < state.length; i++) {
     if (state[0][i] === state[1][i] && state[1][i] === state[2][i]) {
-      winner = state[0][i];
+      if (state[0][i]) {
+        return state[0][i];
+      }
     }
   }
+  
   // Chequear diagonales
   if (state[0][0] === state[1][1] && state[1][1] === state[2][2]) {
-    winner = state[0][0];
+    return state[0][0];
   }
   if (state[0][2] === state[1][1] && state[1][1] === state[2][0]) {
-    winner = state[0][2];
+    return state[0][2];
   }
-  return winner;
+  return null;
 }
 
 
 // Rellenar el tablero según el estado del juego
 populate(state);
 
-// Asociar eventos a cada casilla del tablero
-let table = document.getElementById("game-table");
-for (let i = 0; i < table.rows.length; i++) {
-  for (let j = 0; j < table.rows[i].cells.length; j++) {
-    table.rows[i].cells[j].onclick = function () {
-
-      // Si la casilla está vacía y no hay un ganador
-      if (state[i][j] === null && winner === null) {
-        state[i][j] = currentPlayer;
-        this.innerHTML = currentPlayer;
-        winner = findWinner(state);
-        if (winner === 'x') {
-          xWins++;
-          alert("X wins!");
-        } else if (winner === 'o') {
-          oWins++;
-          alert("O wins!");
-        } else {
-          currentPlayer = nextPlayer(state);
-          document.getElementById("next-player").innerHTML = currentPlayer;
-        }
-        document.getElementById("x-wins").innerHTML = xWins;
-        document.getElementById("o-wins").innerHTML = oWins;
-      }
-    }
-  }
+/**
+ * Improvement: Este codigo estaba repetido en varias partes de la aplicación.
+ */
+function repaintWins() {
+  document.getElementById("x-wins").innerHTML = xWins;
+  document.getElementById("o-wins").innerHTML = oWins;
 }
 
 // Añadir botón "Nuevo juego"
+/**
+ * Improvement: toda esta logica se ha movido a la function reset
+ */
 let newGameButton = document.createElement("button");
 newGameButton.innerHTML = "Nuevo juego";
-newGameButton.onclick = function () {
-  state = [
-    [null, null, null],
-    [null, null, null],
-    [null, null, null]
-  ];
-  currentPlayer = 'x';
-  winner = null;
-  for (let i = 0; i < table.rows.length; i++) {
-    for (let j = 0; j < table.rows[i].cells.length; j++) {
-      table.rows[i].cells[j].innerHTML = "";
-    }
-  }
-  document.getElementById("next-player").innerHTML = currentPlayer;
-}
+newGameButton.onclick = reset()
 
 document.body.prepend(newGameButton);
 
-function play() {
-  winner = findWinner(state);
+/**
+ * Improvement: Me he deshecho del metodo play() ya toda que la logica era duplicada excepto lo que hemos añadido en este metodo.
+ */
+function setWinner(winner) {
   if (winner) {
     alert(winner + " wins!");
     if (winner === 'x') {
@@ -128,17 +117,14 @@ function play() {
     } else {
       oWins++;
     }
-    document.getElementById("x-wins").innerHTML = xWins;
-    document.getElementById("o-wins").innerHTML = oWins;
-  } else if (checkTie()) {
-    alert("Tie!");
-  } else {
-    currentPlayer = nextPlayer(state);
-    document.getElementById("next-player").innerHTML = currentPlayer;
+    repaintWins()
   }
 }
 
 // Función para manejar el evento onClick
+/**
+ * Improvement: Habia dos sitios donde se añadian eventos onclick a las cells, lo he modificado para que solo sea uno
+ */
 function onClick() {
   if (this.innerHTML === "" && winner === null) {
     this.innerHTML = currentPlayer;
@@ -148,9 +134,9 @@ function onClick() {
     winner = findWinner(state);
     if (winner) {
       this.classList.add("winner");
-      play();
+      setWinner(winner);
     } else if (checkTie()) {
-      play();
+      alert("Tie!");
     } else {
       currentPlayer = nextPlayer(state);
       document.getElementById("next-player").innerHTML = currentPlayer;
@@ -160,11 +146,7 @@ function onClick() {
 
 // Función para reiniciar el juego
 function reset() {
-  state = [
-    [null, null, null],
-    [null, null, null],
-    [null, null, null]
-  ];
+  state = initialState();
   currentPlayer = 'x';
   winner = null;
   for (let i = 0; i < table.rows.length; i++) {
@@ -177,15 +159,12 @@ function reset() {
 }
 
 // Función para determinar si hay un empate
+/**
+ * Improvement: realmente no hay que recorrer todas las cells y usar un condicional a cada una para asegurarse que
+ * no hay ninguna "null", con la funcion every podemos asegurarnos que todas cumplen la misma condicion
+ */
 function checkTie() {
-  for (let i = 0; i < state.length; i++) {
-    for (let j = 0; j < state[i].length; j++) {
-      if (state[i][j] === null) {
-        return false;
-      }
-    }
-  }
-  return true;
+  return state.every(row => row.every(cell => cell !== null));
 }
 
 // Añadir eventos onClick a cada casilla del tablero
