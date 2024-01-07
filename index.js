@@ -145,6 +145,9 @@ function onClick() {
 }
 
 // Función para reiniciar el juego
+/**
+ * Improvement, usamos la constante initialState en vez de repetir la misma matriz vacía
+ */
 function reset() {
   state = initialState();
   currentPlayer = 'x';
