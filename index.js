@@ -100,11 +100,6 @@ function repaintWins() {
 /**
  * Improvement: toda esta logica se ha movido a la function reset
  */
-let newGameButton = document.createElement("button");
-newGameButton.innerHTML = "Nuevo juego";
-newGameButton.onclick = reset()
-
-document.body.prepend(newGameButton);
 
 /**
  * Improvement: Me he deshecho del metodo play() ya toda que la logica era duplicada excepto lo que hemos añadido en este metodo.
@@ -126,8 +121,8 @@ function setWinner(winner) {
  * Improvement: Habia dos sitios donde se añadian eventos onclick a las cells, lo he modificado para que solo sea uno
  */
 function onClick() {
-  if (this.innerHTML === "" && winner === null) {
-    this.innerHTML = currentPlayer;
+  if (this.classList.length === 0 && winner === null) {
+    this.classList.add(currentPlayer);
     let row = this.parentNode.rowIndex;
     let col = this.cellIndex;
     state[row][col] = currentPlayer;
@@ -139,7 +134,9 @@ function onClick() {
       alert("Tie!");
     } else {
       currentPlayer = nextPlayer(state);
-      document.getElementById("next-player").innerHTML = currentPlayer;
+      const nextPlayerElem = document.getElementById("next-player")
+      nextPlayerElem.src = currentPlayer === "x" ? "cross.svg" : "circle.svg";
+      nextPlayerElem.className = currentPlayer
     }
   }
 }
@@ -154,11 +151,12 @@ function reset() {
   winner = null;
   for (let i = 0; i < table.rows.length; i++) {
     for (let j = 0; j < table.rows[i].cells.length; j++) {
-      table.rows[i].cells[j].innerHTML = "";
-      table.rows[i].cells[j].classList.remove("winner");
+      table.rows[i].cells[j].className = ""
     }
   }
-  document.getElementById("next-player").innerHTML = currentPlayer;
+  const nextPlayerElem = document.getElementById("next-player")
+  nextPlayerElem.src = currentPlayer === "x" ? "cross.svg" : "circle.svg";
+  nextPlayerElem.className = currentPlayer
 }
 
 // Función para determinar si hay un empate
@@ -177,5 +175,3 @@ for (let i = 0; i < table.rows.length; i++) {
   }
 }
 
-// Añadir evento onClick al botón "Nuevo juego"
-newGameButton.onclick = reset;

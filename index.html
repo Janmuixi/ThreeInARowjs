@@ -5,17 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="main.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <title>Document</title>
 </head>
 
 <body>
-    <div>
+    <header>
+        <div class="title">
+            Tic tac toe
+        </div>
+    </header>
+    <div class="content">
+        <div class="next-player-container"><div>Turno de: </div><img class="x" src="cross.svg" id="next-player"></div>
         <table id="game-table"></table>
     </div>
-    <div>
-        <p>Siguiente jugador: <span id="next-player">x</span></p>
-        <p>X gana: <span id="x-wins">0</span></p>
-        <p>O gana: <span id="o-wins">0</span></p>
+    <div class="bottom-container">
+        <div>Puntuación</div>
+        <div class="scores">
+            <div class="score-x"><img src="cross.svg"> - <span id="x-wins">0</span></div>
+            <div class="score-o"><img src="circle.svg"> - <span id="o-wins">0</span></div>
+        </div>
+        <button id="new-game-btn" onclick="reset()">Nuevo juego</button>
     </div>
 </body>
 
