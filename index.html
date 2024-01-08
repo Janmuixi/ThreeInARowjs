@@ -11,22 +11,28 @@
 </head>
 
 <body>
-    <header>
-        <div class="title">
-            Tic tac toe
+    <div>
+        <header>
+            <div class="title">
+                <span>Tic tac toe</span>
+            </div>
+        </header>
+        <div class="content">
+            <div class="next-player-container disabled"><div id="next-player-label"><span>Turno de: </span></div><div class="x " id="next-player-image"></div></div>
+            <table id="game-table"></table>
+            <div class="change-color-container">
+                <button onclick="setTheme()" class="change-color-btn">Cambia el color</button>
+            </div>
         </div>
-    </header>
-    <div class="content">
-        <div class="next-player-container"><div>Turno de: </div><img class="x" src="cross.svg" id="next-player"></div>
-        <table id="game-table"></table>
-    </div>
-    <div class="bottom-container">
-        <div>Puntuación</div>
-        <div class="scores">
-            <div class="score-x"><img src="cross.svg"> - <span id="x-wins">0</span></div>
-            <div class="score-o"><img src="circle.svg"> - <span id="o-wins">0</span></div>
+        
+        <div class="bottom-container disabled">
+            <div>Puntuación</div>
+            <div class="scores">
+                <div class="score-x"><div class="score-x-image"></div> - <span id="x-wins">0</span></div>
+                <div class="score-o"><div class="score-o-image"></div> - <span id="o-wins">0</span></div>
+            </div>
+            <button id="new-game-btn" onclick="reset()">Nuevo juego</button>
         </div>
-        <button id="new-game-btn" onclick="reset()">Nuevo juego</button>
     </div>
 </body>
 

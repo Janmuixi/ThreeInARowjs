@@ -1,3 +1,20 @@
+
+:root {
+    --main-cell-one-color: #e5fffa;
+    --main-cell-two-color: #fff3f2;
+    --secondary-cell-one-color: #faf3db;
+    --secondary-cell-two-color: #edf0f5;
+    --main-cross-url: url('https://raw.githubusercontent.com/Janmuixi/images/f4ef6093d28d8da2f5e6d387af5a2a09c6d75ccf/cross.svg');
+    --main-circle-url: url('https://raw.githubusercontent.com/Janmuixi/images/f4ef6093d28d8da2f5e6d387af5a2a09c6d75ccf/circle.svg');
+    --disabled-cross-url: url('https://raw.githubusercontent.com/Janmuixi/images/b38fa645fa5c12d75ad5daeedbe40e176cf50288/disabled-cross.svg');
+    --disabled-circle-url: url('https://raw.githubusercontent.com/Janmuixi/images/b38fa645fa5c12d75ad5daeedbe40e176cf50288/disabled-circle.svg');
+    --secondary-cross-url: url('https://raw.githubusercontent.com/Janmuixi/images/f4ef6093d28d8da2f5e6d387af5a2a09c6d75ccf/secondary-cross.svg');
+    --secondary-circle-url: url('https://raw.githubusercontent.com/Janmuixi/images/f4ef6093d28d8da2f5e6d387af5a2a09c6d75ccf/secondary-circle.svg');
+    --selected-cell-one-color: var(--main-cell-one-color);
+    --selected-cell-two-color: var(--main-cell-two-color);
+    --selected-cross-url: var(--main-cross-url);
+    --selected-circle-url: var(--main-circle-url);
+}
 body {
     font-family: Montserrat;
     color: #173259;
@@ -22,12 +39,12 @@ td {
     background-position: center;
 }
 td.o {
-    background-image: url('circle.svg');
-    background-color: #fff3f2;
+    background-image: var(--selected-circle-url);
+    background-color: var(--selected-cell-one-color);
 }
 td.x {
-    background-image: url('cross.svg');
-    background-color: #e5fffa;
+    background-image: var(--selected-cross-url);
+    background-color: var(--selected-cell-two-color);
 }
 
 header {
@@ -62,14 +79,27 @@ header {
     align-items: center;
     justify-content: center;
 }
-#next-player {
+.next-player-container.disabled #next-player-image {
+    display: none;
+}
+.next-player-container.disabled #next-player-label span {
+    display: none;
+}
+.next-player-container.disabled #next-player-label::after {
+    content: "¡Empezamos!";
+}
+#next-player-image {
     width: 28px;
     height: 28px;
     margin-left: 10px;
+    background-image: var(--selected-circle-url);
+    background-size: contain;
 }
-#next-player.x {
+#next-player-image.x {
     width: 36px;
     height: 36px;
+    background-image: var(--selected-cross-url);
+    background-size: contain;
 }
 
 #new-game-btn {
@@ -110,6 +140,12 @@ header {
     font-size: 20px;
     font-weight: 700;
 }
+.bottom-container.disabled {
+    color: #dfe0e0;
+}
+.bottom-container.disabled #new-game-btn {
+    background-color: #dfe0e0;
+}
 .scores {
     display: flex;
     align-items: center;
@@ -122,20 +158,52 @@ header {
     align-items: center;
     justify-content: center;
 }
-.score-x img, .score-o img {
+.score-x-image, .score-o-image {
     margin-right: 10px;
 }
 .score-o {
     margin-left: 20px;
 }
-.score-x img {
+.score-x-image {
     width: 42px;
     height: 42px;
+    background-image: var(--selected-cross-url);
+    background-size: contain;
 }
-.score-o img {
+.score-o-image {
     width: 32px;
     height: 32px;
+    background-image: var(--selected-circle-url);
+    background-size: contain;
+}
+.bottom-container.disabled .scores .score-x .score-x-image {
+    background-image: var(--disabled-cross-url);
+}
+.bottom-container.disabled .scores .score-o .score-o-image {
+    background-image: var(--disabled-circle-url);
 }
 #x-wins, #o-wins {
     margin-left: 10px;
+}
+.change-color-container {
+    display: flex;
+    justify-content: right;
+    margin-top: 10px;
+    width: 350px;
+}
+.change-color-btn {
+    width: 109px;
+    height: 32px;
+    border-radius: 2px;
+    border: solid 1px #29ddb9;
+    color: #29ddb9;
+    font-size: 12px;
+    background-color: #fff;
+    float: right;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+.change-color-btn:hover {
+    color: #fff;
+    background-color: #29ddb9;
 }

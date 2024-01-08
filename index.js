@@ -15,8 +15,14 @@ let currentPlayer = 'x';
 let winner = null;
 let xWins = 0;
 let oWins = 0;
-
 let table = document.getElementById("game-table");
+
+/**
+ * Improvement: aqui defino la root de los estilos donde guardo las variables para los themes
+ */
+const r = document.querySelector(':root');
+let darkTheme = false
+
 
 // Función para rellenar el tablero según el estado del juego
 /**
@@ -96,17 +102,11 @@ function repaintWins() {
   document.getElementById("o-wins").innerHTML = oWins;
 }
 
-// Añadir botón "Nuevo juego"
-/**
- * Improvement: toda esta logica se ha movido a la function reset
- */
-
 /**
  * Improvement: Me he deshecho del metodo play() ya toda que la logica era duplicada excepto lo que hemos añadido en este metodo.
  */
 function setWinner(winner) {
   if (winner) {
-    alert(winner + " wins!");
     if (winner === 'x') {
       xWins++;
     } else {
@@ -122,6 +122,7 @@ function setWinner(winner) {
  */
 function onClick() {
   if (this.classList.length === 0 && winner === null) {
+    removeDisabledClasses()
     this.classList.add(currentPlayer);
     let row = this.parentNode.rowIndex;
     let col = this.cellIndex;
@@ -134,8 +135,7 @@ function onClick() {
       alert("Tie!");
     } else {
       currentPlayer = nextPlayer(state);
-      const nextPlayerElem = document.getElementById("next-player")
-      nextPlayerElem.src = currentPlayer === "x" ? "cross.svg" : "circle.svg";
+      const nextPlayerElem = document.getElementById("next-player-image")
       nextPlayerElem.className = currentPlayer
     }
   }
@@ -155,8 +155,9 @@ function reset() {
     }
   }
   const nextPlayerElem = document.getElementById("next-player")
-  nextPlayerElem.src = currentPlayer === "x" ? "cross.svg" : "circle.svg";
-  nextPlayerElem.className = currentPlayer
+  if (nextPlayerElem) {
+    nextPlayerElem.className = currentPlayer
+  }
 }
 
 // Función para determinar si hay un empate
@@ -175,3 +176,40 @@ for (let i = 0; i < table.rows.length; i++) {
   }
 }
 
+/**
+ * Improvement: Aqui tengo la funcion para cambiar de tema, simplemente
+ * modifico las variables de donde se accede a las imagenes o colores
+ */
+function setTheme() {
+  darkTheme = !darkTheme
+  const rs = getComputedStyle(r);
+
+  if (darkTheme) {
+    r.style.setProperty('--selected-cell-one-color', rs.getPropertyValue('--secondary-cell-one-color'))
+    r.style.setProperty('--selected-cell-two-color', rs.getPropertyValue('--secondary-cell-two-color'))
+    r.style.setProperty('--selected-cross-url', rs.getPropertyValue('--secondary-cross-url'))
+    r.style.setProperty('--selected-circle-url', rs.getPropertyValue('--secondary-circle-url'))
+  }
+  else {
+    r.style.setProperty('--selected-cell-one-color', rs.getPropertyValue('--main-cell-one-color'))
+    r.style.setProperty('--selected-cell-two-color', rs.getPropertyValue('--main-cell-two-color'))
+    r.style.setProperty('--selected-cross-url', rs.getPropertyValue('--main-cross-url'))
+    r.style.setProperty('--selected-circle-url', rs.getPropertyValue('--main-circle-url'))
+  }
+}
+
+/**
+ * Improvement: Aqui borro la clase disabled de todos los elementos
+ */
+function removeDisabledClasses() {
+  let elements = document.getElementsByClassName('disabled');
+  while(elements.length >= 1) {
+    for (var i = 0; i < elements.length; i++) {
+      var currentElement = elements[i];
+      
+      currentElement.classList.remove('disabled')
+      elements = document.getElementsByClassName('disabled');
+    }
+  }
+  
+}
